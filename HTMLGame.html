@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Improved Flappy Game</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
+        
+        .game-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100vw;
+            height: 100vh;
+            background-color: skyblue;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .bird {
+            width: 30px;
+            height: 30px;
+            background-color: yellow;
+            position: absolute;
+            border-radius: 50%;
+            bottom: 50%;
+        }
+
+        .obstacle {
+            width: 60px;
+            position: absolute;
+            bottom: 0;
+            background-color: green;
+        }
+
+        .top {
+            bottom: initial;
+            top: 0;
+        }
+
+        #startScreen {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+            z-index: 2;
+        }
+
+        #score {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+            color: white;
+            z-index: 1;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+    <div id="startScreen">
+        <h2>Ready to Fly?</h2>
+        <button onclick="startGame()">Begin</button>
+    </div>
+    <div id="score" class="hidden">Score: 0</div>
+    <div class="bird"></div>
+</div>
+
+<script>
+    let bird = document.querySelector('.bird');
+    let gameContainer = document.querySelector('.game-container');
+    let startScreen = document.getElementById('startScreen');
+    let scoreElement = document.getElementById('score');
+    let obstacles = [];
+    let score = 0;
+    let gameInterval, obstacleInterval, obstacleSpeed = 4;
+
+    function startGame() {
+        bird.style.bottom = '50%'; 
+        bird.style.left = '150px';
+        obstacles.forEach(obstacle => obstacle.remove());
+        obstacles = [];
+        score = 0;
+        scoreElement.innerText = 'Score: 0';
+        scoreElement.classList.remove('hidden');
+        startScreen.style.display = 'none';
+
+        clearInterval(gameInterval);
+        clearInterval(obstacleInterval);
+        gameInterval = setInterval(runGame, 20);
+        obstacleInterval = setInterval(createObstacle, 1800);
+        document.addEventListener('keydown', control);
+    }
+
+    function runGame() {
+        obstacles.forEach(obstacle => {
+            let obstaclePos = parseFloat(window.getComputedStyle(obstacle).left);
+            if (obstaclePos <= -60) {
+                obstacle.remove(); 
+                obstacles.shift();
+            } else {
+                obstacle.style.left = obstaclePos - obstacleSpeed + 'px';
+            }
+
+            if (!obstacle.classList.contains('passed') && bird.offsetLeft < obstaclePos + obstacle.offsetWidth &&
+                bird.offsetLeft + bird.offsetWidth > obstaclePos &&
+                bird.offsetTop < obstacle.offsetTop + obstacle.offsetHeight &&
+                bird.offsetTop + bird.offsetHeight > obstacle.offsetTop) {
+                endGame();
+            }
+
+            if (obstaclePos < bird.offsetLeft && !obstacle.classList.contains('passed')) {
+                obstacle.classList.add('passed');
+                score++;
+                scoreElement.innerText = 'Score: ' + score;
+            }
+        });
+    }
+
+    function control(e) {
+        if (e.keyCode === 38) {
+            bird.style.bottom = parseInt(bird.style.bottom) + 60 + 'px';
+        } else if (e.keyCode === 40) {
+            bird.style.bottom = parseInt(bird.style.bottom) - 60 + 'px';
+        }
+    }
+
+    function createObstacle() {
+        let obstacle = document.createElement('div');
+        let topObstacle = document.createElement('div');
+        obstacle.classList.add('obstacle');
+        topObstacle.classList.add('obstacle', 'top');
+
+        let obstacleHeight = Math.random() * 200;
+        let gap = 200;
+        obstacle.style.height = obstacleHeight + 'px';
+        topObstacle.style.height = (gameContainer.clientHeight - obstacleHeight - gap) + 'px';
+        obstacle.style.left = '100vw';
+        topObstacle.style.left = '100vw';
+
+        gameContainer.appendChild(obstacle);
+        gameContainer.appendChild(topObstacle);
+        obstacles.push(obstacle, topObstacle);
+    }
+
+    function endGame() {
+        clearInterval(gameInterval);
+        clearInterval(obstacleInterval);
+        obstacles.forEach(obstacle => obstacle.remove());
+        document.removeEventListener('keydown', control);
+        startScreen.style.display = 'flex';
+        scoreElement.classList.add('hidden');
+        startScreen.innerHTML = `<h2>Game Over</h2><p>Your score: ${score}</p><button onclick="startGame()">Restart</button>`;
+    }
+</script>
+</body>
+</html>
