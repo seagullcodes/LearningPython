@@ -1,0 +1,11 @@
+var user = {
+    firstName : "Hitesh",
+    lastName : "Choudhary",
+    role : "Admin",
+    loginCount : 32,
+    facebookSignedIn: true,
+    courseList: [],
+    buyCourse : function(courseName){
+        this.courseList
+    }
+}
