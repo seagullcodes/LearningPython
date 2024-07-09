@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>World Predictor</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f0f0f0;
+      text-align: center;
+    }
+
+    .container {
+      width: 80%;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      font-size: 3em;
+      color: #333;
+    }
+
+    .world {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 2px solid #333;
+      margin: 20px auto;
+      background-image: url("https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png");
+      background-size: cover;
+    }
+
+    .waves {
+      width: 100%;
+      height: 100px;
+      background-image: linear-gradient(to right, #dfe6e9, #a4b0be, #dfe6e9);
+      background-size: 200% 100%;
+      animation: wave 5s linear infinite;
+    }
+
+    @keyframes wave {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    .question {
+      font-size: 1.5em;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .button:hover {
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>WORLD PREDICTOR</h1>
+
+    <div class="world"></div>
+
+    <div class="waves"></div>
+
+    <div class="question">
+      Will your team make it to worlds?
+    </div>
+
+    <a href="#" class="button">Click here to find out</a>
+  </div>
+</body>
+</html>
